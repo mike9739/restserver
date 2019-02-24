@@ -1,21 +1,36 @@
 const express = require('express')
 const app = express()
-
+const User = require('../models/users')
 app.get('/usuario',(req,res)=>{
     res.json('get Usuario')
 })
 app.post('/usuario',(req,res)=>{
     let body = req.body
-    if(body.nombre === undefined){
-        res.status(500).json({
-            ok:false,
-            message:'El nombre es necesario'
-        });
-    }
-    else{
+    //se crea la insrancia para el nuevo usuario
+    let user = new User({
+        name:body.name,
+        email:body.email,
+        password:body.password,
+        role:body.role
+    })
+
+    //Guardando el usuario en la base de datos
+
+    user.save((err,userDB)=>{
+        //comprueba si no existen errores   
+        if(err){
+            return res.status(400).json({
+                ok:false,
+                err
+            })
+        }
+        //success
         res.status(200).json({
-            persona:body})
-    }
+            ok:true,
+            user:userDB
+        })
+    })
+    
     
 })
 app.put('/usuario/:id',(req,res)=>{

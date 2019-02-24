@@ -4,13 +4,15 @@ const bodyparser = require('body-parser')
 const mongoose = require('mongoose')
 
 const app = express()
-app.use(require('./routes/rutas'))
 
-//middlewares
+                //middlewares
 //parse apllication www-form-utlencoded
 app.use(bodyparser.urlencoded({extended:false}))
 //parse app/json
 app.use(bodyparser.json())
+
+            //configuraciones
+app.use(require('./routes/rutas'))
 
 //conexion a la base de datos, con la nueva forma de mongodb
 mongoose.connect('mongodb://localhost:27017/cafe', { useNewUrlParser: true }, (err, res) => {
