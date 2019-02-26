@@ -1,6 +1,7 @@
 const express = require('express')
-const app = express()
+const bcrypt = require('bcrypt')
 const User = require('../models/users')
+const app = express()
 app.get('/usuario',(req,res)=>{
     res.json('get Usuario')
 })
@@ -10,7 +11,7 @@ app.post('/usuario',(req,res)=>{
     let user = new User({
         name:body.name,
         email:body.email,
-        password:body.password,
+        password:bcrypt.hashSync(body.password,10),
         role:body.role
     })
 
@@ -24,6 +25,9 @@ app.post('/usuario',(req,res)=>{
                 err
             })
         }
+        //Se borra la contraseña de la respuesta
+        // userDB.password = null
+
         //success
         res.status(200).json({
             ok:true,
