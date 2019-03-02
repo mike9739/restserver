@@ -1,12 +1,14 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const User = require('../models/users')
+const _ = require('underscore')
 const app = express()
 app.get('/usuario',(req,res)=>{
     res.json('get Usuario')
 })
 app.post('/usuario',(req,res)=>{
-    let body = req.body
+    //configura las variables del esquema que se pueden modificar
+    let body = _.pick(req.body,['name','email','img','role','state'])
     //se crea la insrancia para el nuevo usuario
     let user = new User({
         name:body.name,
@@ -41,7 +43,7 @@ app.put('/usuario/:id',(req,res)=>{
     let id = req.params.id
     let body = req.body
 
-    User.findOneAndUpdate(id,body,{new:true},(err,userDB)=>{
+    User.findOneAndUpdate(id,body,{new:true,runValidators:true,context:'query'},(err,userDB)=>{
        
         if(err){
             return res.status(400).json({
