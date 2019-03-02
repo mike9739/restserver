@@ -39,8 +39,20 @@ app.post('/usuario',(req,res)=>{
 })
 app.put('/usuario/:id',(req,res)=>{
     let id = req.params.id
-    res.json({
-        id
+    let body = req.body
+
+    User.findOneAndUpdate(id,body,{new:true},(err,userDB)=>{
+       
+        if(err){
+            return res.status(400).json({
+                ok:false,
+                err
+            })
+        }
+        res.status(200).json({
+            ok:true,
+            user:userDB
+        })
     })
 })
 app.delete('/usuario',(req,res)=>{
